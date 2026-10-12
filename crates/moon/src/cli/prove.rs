@@ -159,6 +159,7 @@ pub(crate) fn run_prove(
         cli.workspace_env.clone(),
     );
     let discovered = rr_build::sync_and_discover_project(&preparation_config, &dirs, user_log)?;
+    let target_backend = rr_build::default_target_backend(&discovered, user_log);
     let resolved_project = discovered.resolve_packages(user_log)?;
     let _lock;
     if !cli.dry_run {
@@ -172,7 +173,7 @@ pub(crate) fn run_prove(
     let compile_config = rr_build::prepare_resolved_build(
         cli,
         &build_flags,
-        None,
+        target_backend,
         target_dir,
         RunMode::Prove,
         user_log,
